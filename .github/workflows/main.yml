@@ -1,6 +1,6 @@
 name: Ejecutar Tests en GitHub Actions
 
-on: 
+on:
   push:
     branches:
       - main
@@ -15,17 +15,28 @@ jobs:
     steps:
       - name: 📥 Clonar el repositorio
         uses: actions/checkout@v3
-      
-      - name: 🏗️ Configurar .NET
+
+      - name: 🛠 Configurar .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 9.0.x  # Asegúrate de usar la versión correcta
+          dotnet-version: 9.0.x # Asegúrate de usar la versión correcta
 
-      - name: 🛠️ Restaurar dependencias
+      - name: 🔧 Restaurar dependencias
         run: dotnet restore
 
-      - name: 🏗️ Compilar el proyecto
+      - name: ⚙️ Compilar el proyecto
         run: dotnet build --configuration Release --no-restore
 
-      - name: 🧪 Ejecutar pruebas
+      # 🔽 Agregar instalación de Chrome y Chromedriver
+      - name: 🔽 Instalar Chrome y Chromedriver
+        run: |
+          sudo apt update
+          sudo apt install -y google-chrome-stable
+          CHROME_VERSION=$(google-chrome --version | awk '{print $3}')
+          wget -N https://storage.googleapis.com/chrome-for-testing-public/$CHROME_VERSION/linux64/chromedriver-linux64.zip
+          unzip chromedriver-linux64.zip
+          sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
+
+      - name: ✅ Ejecutar pruebas
         run: dotnet test --no-restore --verbosity normal
