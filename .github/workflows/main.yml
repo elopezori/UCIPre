@@ -19,7 +19,7 @@ jobs:
       - name: 🏗️ Configurar .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.x  # Asegúrate de usar la versión correcta
+          dotnet-version: 9.0.x  # Asegúrate de usar la versión correcta
 
       - name: 🛠️ Restaurar dependencias
         run: dotnet restore
